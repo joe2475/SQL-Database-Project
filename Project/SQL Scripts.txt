@@ -1,0 +1,752 @@
+###############################
+Create Tables
+###############################
+
+CREATE TABLE PEOPLE(
+    personal_id NUMBER(6) ,
+    email VARCHAR2(20),
+    first_name VARCHAR2(20) NOT NULL, 
+    last_name VARCHAR2(20) NOT NULL,
+    PRIMARY KEY(personal_id)
+); 
+
+CREATE TABLE EMPLOYEE(
+    emp_id NUMBER(6) UNIQUE ,
+    rank_title VARCHAR2(20),
+    supervisor_id NUMBER(6),
+    FOREIGN KEY(emp_id) REFERENCES PEOPLE(personal_id),
+    FOREIGN KEY(supervisor_id) REFERENCES PEOPLE(personal_id)
+); 
+
+
+
+CREATE TABLE CUSTOMER(
+    cust_id NUMBER(6) UNIQUE ,
+    perf_sales_emp VARCHAR2(20),
+    FOREIGN KEY(cust_id) REFERENCES PEOPLE(personal_id)
+); 
+
+
+CREATE TABLE POTENTIAL_EMPLOYEE(
+    potenemp_id NUMBER(6) UNIQUE,
+    FOREIGN KEY(potenemp_id) REFERENCES PEOPLE(personal_id)
+
+);
+
+
+
+CREATE TABLE DEPARTMENT(
+    dept_id NUMBER(6) ,
+    dept_name VARCHAR2(15),
+    PRIMARY KEY(dept_id)
+);
+
+CREATE TABLE JOB_POSITIONS(
+    job_id NUMBER(6) ,
+    job_description VARCHAR2(40),
+    posted_date DATE,
+    dept NUMBER(6), 
+    PRIMARY KEY(job_id),
+    FOREIGN KEY(dept) REFERENCES DEPARTMENT(dept_id)
+); 
+
+
+
+CREATE TABLE APPLIED(
+    job_id NUMBER(6),
+    personal_id NUMBER(6),
+    applied_date DATE,
+    PRIMARY KEY(job_id, personal_id),
+    FOREIGN KEY (job_id) REFERENCES JOB_POSITIONS(job_id),
+    FOREIGN KEY (personal_id) REFERENCES PEOPLE(personal_id)
+);
+
+CREATE TABLE VENDOR(
+    vendor_id NUMBER(6) ,
+    ven_name VARCHAR2(30),
+    account_number NUMBER(16),
+    url VARCHAR2(15), 
+    credit_rating NUMBER(4),
+    PRIMARY KEY(vendor_id)
+); 
+
+
+CREATE TABLE PARTS(
+    part_id NUMBER(6) ,
+    ven_id   NUMBER(6),
+    price NUMBER(*,2),
+    part_name VARCHAR2(20), 
+    PRIMARY KEY(part_id),
+    FOREIGN KEY(ven_id) REFERENCES VENDOR(vendor_id)
+); 
+
+CREATE TABLE INTERVIEW(
+    interview_id NUMBER(6) ,
+    job_position   NUMBER(6),
+    grade NUMBER(3,2),
+    pass_fail VARCHAR2(4),
+    interviewee_id NUMBER(6),
+    interviewer_firstname VARCHAR2(20),
+    interviewer_lastname VARCHAR2(20),
+    PRIMARY KEY(interview_id),
+    FOREIGN KEY(job_position) REFERENCES JOB_POSITIONS(job_id),
+    FOREIGN KEY(interviewee_id) REFERENCES PEOPLE(personal_id)
+); 
+
+CREATE TABLE PRODUCT(
+    product_id NUMBER(6) ,
+    product_type  VARCHAR2(20),
+    weight NUMBER(4),
+    prod_style VARCHAR2(15),
+    list_price NUMBER(*,2),
+    prod_size VARCHAR2(20),
+    PRIMARY KEY(product_id)
+); 
+
+
+CREATE TABLE PROD_PART(
+    prod_id NUMBER(6),
+    part_id NUMBER(6),
+    num_parts  NUMBER(6),
+    PRIMARY KEY(prod_id, part_id),
+    FOREIGN KEY (prod_id) REFERENCES PRODUCT(product_id),
+    FOREIGN KEY (part_id) REFERENCES PARTS(part_id)
+
+);
+
+
+
+
+CREATE TABLE DEPT_EMP
+(
+    dept_id NUMBER(6),
+    emp_id NUMBER(6),
+    start_time VARCHAR2(20),
+    end_time   VARCHAR2(20),
+    PRIMARY KEY( dept_id, emp_id),
+    FOREIGN KEY(dept_id) REFERENCES DEPARTMENT(dept_id),
+    FOREIGN KEY(emp_id) REFERENCES EMPLOYEE(emp_id)
+
+
+);
+
+
+
+CREATE TABLE ADDRESS
+(
+    id NUMBER(4),
+    personal_id NUMBER(6),
+    address_line VARCHAR2(25),
+    city    VARCHAR2(10),
+    state   VARCHAR2(2),
+    zip     VARCHAR2(5),
+    PRIMARY KEY(id),
+    FOREIGN KEY(personal_id) REFERENCES PEOPLE(personal_id)
+)
+
+
+CREATE TABLE VENDOR_ADDRESS
+(
+    id NUMBER(4),
+    vendor_id NUMBER(6),
+    address_line VARCHAR2(25),
+    city    VARCHAR2(10),
+    state   VARCHAR2(2),
+    zip     VARCHAR2(5),
+    PRIMARY KEY(id),
+    FOREIGN KEY(vendor_id) REFERENCES VENDOR(vendor_id)
+)
+
+CREATE TABLE EMP_PAY
+(
+    emp_id NUMBER(6),
+    transaction_num NUMBER(10),
+    pay_date DATE,
+    amount NUMBER(3,2),
+    PRIMARY KEY(emp_id, transaction_num),
+    FOREIGN KEY(emp_id) REFERENCES EMPLOYEE(emp_id)
+)
+
+
+
+CREATE TABLE PHONE(
+    person_id NUMBER(6),
+    phone_number VARCHAR2(20),
+    PRIMARY KEY(person_id, phone_number),
+    FOREIGN KEY(person_id) REFERENCES PEOPLE(personal_id)
+
+)
+
+CREATE TABLE MARKETING_SITES(
+    site_id NUMBER(6),
+    site_location VARCHAR2(20),
+    site_name VARCHAR2(20),
+    PRIMARY KEY(site_id)
+
+)
+
+CREATE TABLE MARKETING_EMPLOYEES(
+    site_id NUMBER(6),
+    emp_id NUMBER(6),
+    PRIMARY KEY(site_id, emp_id),
+    FOREIGN KEY(emp_id) REFERENCES EMPLOYEE(emp_id)
+
+)
+
+CREATE TABLE SALES_HISTORY(
+    sales_id NUMBER(6),
+    product NUMBER(6),
+    sales_person_id NUMBER(6),
+    sale_time VARCHAR2(20),
+    customer_id NUMBER(6),
+    marketing_site NUMBER(6),
+    PRIMARY KEY(sales_id),
+    FOREIGN KEY(product) REFERENCES PRODUCT(product_id),
+    FOREIGN KEY(sales_person_id) REFERENCES EMPLOYEE(emp_id),
+    FOREIGN KEY(customer_id) REFERENCES CUSTOMER(cust_id),
+    FOREIGN KEY(marketing_site) REFERENCES MARKETING_SITES(site_id)
+    
+
+)
+
+
+#############################################
+Insert Data
+#############################################
+PHONE
+        INSERT INTO PHONE
+    VALUES (1, '214-555-55555'); 
+      INSERT INTO PHONE
+    VALUES (2, '972-555-55555'); 
+      INSERT INTO PHONE
+    VALUES (3, '888-555-55555'); 
+           INSERT INTO PHONE
+    VALUES (4, '890-555-55555'); 
+
+       INSERT INTO PHONE
+    VALUES (4, '890-555-55555'); 
+
+      INSERT INTO PHONE
+    VALUES (5, '999-555-55555'); 
+      INSERT INTO PHONE
+    VALUES (6, '299-555-55555'); 
+      INSERT INTO PHONE
+    VALUES (7, '199-555-55555'); 
+     
+        INSERT INTO PHONE
+    VALUES (8, '399-555-55555'); 
+
+        INSERT INTO PHONE
+    VALUES (9, '349-555-55555'); 
+           INSERT INTO PHONE
+    VALUES (10, '349-555-55555'); 
+        INSERT INTO PHONE
+    VALUES (11, '379-555-55555'); 
+
+  INSERT INTO PHONE
+    VALUES (12, '559-555-55555');
+
+
+
+PEOPLE
+
+INSERT INTO PEOPLE 
+    VALUES (1,'jsmith@gmail.com', 'John', 'Smith');
+
+INSERT INTO PEOPLE 
+    VALUES (2,'hreed@gmail.com', 'Hugh', 'Reed'); 
+  
+
+INSERT INTO PEOPLE 
+    VALUES (3,'erobinson@ymail.com', 'Ethyl', 'Robinson'); 
+
+
+INSERT INTO PEOPLE 
+    VALUES (4,'lmeyer@email.com', 'Lynda', 'Meyer'); 
+
+
+INSERT INTO PEOPLE 
+    VALUES (5,'sPyle@email.com', 'Seema', 'Pyle'); 
+
+INSERT INTO PEOPLE 
+    VALUES (6,'jskel@email.com', 'Jack', 'Skelington'); 
+
+    
+INSERT INTO PEOPLE 
+    VALUES (7,'chackney@email.com', 'Candra', 'Hackney'); 
+
+
+INSERT INTO PEOPLE 
+    VALUES (8,'forfun@email.com', 'Edra', 'Ulrich'); 
+
+INSERT INTO PEOPLE 
+    VALUES (9,'fake@email.com', 'Fan', 'Sanders'); 
+
+INSERT INTO PEOPLE 
+    VALUES (10,'fake@gmail.com', 'Fish', 'Sand'); 
+
+INSERT INTO PEOPLE 
+    VALUES (11,'fake@yahoo.com', 'Leroy', 'Jenkins'); 
+
+ INSERT INTO PEOPLE 
+    VALUES (12,'f@yahoo.com', 'Hellen', 'Cole'); 
+
+EMPLOYEE
+    
+INSERT INTO EMPLOYEE
+    VALUES (2,'Supervisor', NULL); 
+
+
+INSERT INTO EMPLOYEE
+    VALUES (4,'Office', 2); 
+
+
+INSERT INTO EMPLOYEE
+    VALUES (3,'Office', 2); 
+
+INSERT INTO EMPLOYEE
+    VALUES (6,'Supervisor', NULL); 
+
+INSERT INTO EMPLOYEE
+    VALUES (9,'Regular', 2); 
+
+INSERT INTO EMPLOYEE
+    VALUES (10,'Regular', 2); 
+
+
+CUSTOMER
+  INSERT INTO CUSTOMER
+    VALUES (5,'Jack'); 
+    
+    INSERT INTO CUSTOMER
+    VALUES (8,'Jack'); 
+
+
+POTENTIAL_EMPLOYEE
+   INSERT INTO POTENTIAL_EMPLOYEE
+    VALUES (7); 
+
+    INSERT INTO POTENTIAL_EMPLOYEE
+    VALUES (12); 
+
+
+
+PRODUCT
+
+       INSERT INTO PRODUCT
+    VALUES (1, 'Cup', 2, 'black', 2.5, 'small'); 
+
+     INSERT INTO PRODUCT
+    VALUES (2, 'Belt', .5, 'black', 3.00, 'small'); 
+
+    INSERT INTO PRODUCT
+    VALUES (3, 'DVD', .5, 'Ant Man', 10.00, 'medium'); 
+
+  INSERT INTO PRODUCT
+    VALUES (4, 'Knife', 1, 'Black and Red', 12.00, 'small'); 
+
+    INSERT INTO PRODUCT
+    VALUES (5, 'Bowl', 3, 'Saphire', 12.00, 'medium'); 
+
+    INSERT INTO PRODUCT
+    VALUES (6, 'TV', 3, 'Saphire', 500, 'medium'); 
+
+
+DEPARTMENT
+
+        INSERT INTO DEPARTMENT
+    VALUES (1, 'Sales'); 
+
+	
+
+ INSERT INTO DEPARTMENT
+    VALUES (3, 'Marketing'); 
+
+   INSERT INTO DEPARTMENT
+    VALUES (4, 'IT'); 
+
+
+        INSERT INTO DEPARTMENT
+    VALUES (6, 'Customer Serv'); 
+
+
+
+DEPT_EMP
+
+  INSERT INTO DEPT_EMP
+    VALUES (1,2, '8:00', '10:15'); 
+
+
+  INSERT INTO DEPT_EMP
+    VALUES (2,2, '10:30', '5:00'); 
+
+   INSERT INTO DEPT_EMP
+    VALUES (3,4, '10:30', '5:00'); 
+
+
+	 INSERT INTO DEPT_EMP
+    VALUES (3,6, '10:30', '5:00'); 
+
+
+
+ADDRESS
+   INSERT INTO ADDRESS
+    VALUES (1,1, '311 Ralph St', 'MakeUp', 'Tx', '75047'); 
+
+ INSERT INTO ADDRESS
+    VALUES (2,2, '411 Mack St', 'MakeUp', 'Tx', '75047'); 
+
+     INSERT INTO ADDRESS
+    VALUES (3,3, '420 Jack St', 'MakeUp', 'Tx', '75047'); 
+
+     INSERT INTO ADDRESS
+    VALUES (4,4, '420 May St', 'MakeUp', 'Tx', '75047'); 
+
+     INSERT INTO ADDRESS
+    VALUES (5,5, '420 M St', 'MakeUp', 'Tx', '75047'); 
+
+
+   
+     INSERT INTO ADDRESS
+    VALUES (6,6, '460 L St', 'MakeUp', 'Tx', '75047'); 
+
+
+   INSERT INTO ADDRESS
+    VALUES (7,7, '467 7 St', 'MakeUp', 'Tx', '75047'); 
+
+
+ INSERT INTO ADDRESS
+    VALUES (8,8, '490 A St', 'MakeUp', 'Tx', '75047'); 
+
+
+     INSERT INTO ADDRESS
+    VALUES (9,9, '500 B St', 'MakeUp', 'Tx', '75047'); 
+
+
+     INSERT INTO ADDRESS
+    VALUES (10,10, '500 H St', 'MakeUp', 'Tx', '75047'); 
+
+  INSERT INTO ADDRESS
+    VALUES (11,11, '510 H St', 'MakeUp', 'Tx', '75047'); 
+
+  INSERT INTO ADDRESS
+    VALUES (12,12, '514 KL St', 'MakeUp', 'Tx', '75047'); 
+
+EMP_PAY
+      INSERT INTO EMP_PAY
+    VALUES (2,100, '01-Jan-2010', 5000); 
+
+
+      INSERT INTO EMP_PAY
+    VALUES (4,101, '01-Jan-2010', 400); 
+  
+      INSERT INTO EMP_PAY
+    VALUES (3,101, '01-Jan-2010', 2000); 
+
+ INSERT INTO EMP_PAY
+    VALUES (3,102, '01-Feb-2010', 2000); 
+
+   
+      INSERT INTO EMP_PAY
+    VALUES (2,102, '01-Feb-2010', 4000); 
+
+   INSERT INTO EMP_PAY
+    VALUES (4,103, '01-Feb-2010', 3000); 
+
+MARKETING_SITES
+
+     INSERT INTO MARKETING_SITES
+    VALUES (1, 'Jacksville', 'Bramble'); 
+
+      INSERT INTO MARKETING_SITES
+    VALUES (2, 'Dallas', 'Hermes'); 
+      INSERT INTO MARKETING_SITES
+    VALUES (3, 'Folkway', 'Black Woods'); 
+
+
+MARKETING_EMPLOYEES
+
+
+        
+      INSERT INTO MARKETING_EMPLOYEES
+    VALUES (3, 6); 
+    
+      INSERT INTO MARKETING_EMPLOYEES
+    VALUES (3, 4); 
+    
+VENDOR
+
+      INSERT INTO VENDOR
+    VALUES (1, 'Charles Parts', 11122, 'www.cparts.com', 50); 
+
+       
+      INSERT INTO VENDOR
+    VALUES (2, 'Jacks Parts', 11122, 'www.cparts.com', 50); 
+
+   INSERT INTO VENDOR
+    VALUES (3, 'Macks Parts', 144122, 'www.mparts.com', 70); 
+        
+      INSERT INTO VENDOR
+    VALUES (4, 'Billies Parts', 14522, 'www.bparts.com', 80); 
+
+
+
+
+VENDOR_ADDRESS
+    INSERT INTO VENDOR_ADDRESS
+    VALUES (1,1, '510 Hhalls St', 'Up', 'Tx', '75047'); 
+
+     INSERT INTO VENDOR_ADDRESS
+    VALUES (2,2, '550 Galls St', 'Upity', 'Tx', '75047'); 
+
+            
+     INSERT INTO VENDOR_ADDRESS
+    VALUES (3,3, '620 ffalls St', 'Upity', 'Tx', '75047'); 
+
+            
+     INSERT INTO VENDOR_ADDRESS
+    VALUES (4, 4, '6670 maalls St', 'Upity', 'Tx', '75047'); 
+
+
+
+JOB_POSITIONS
+
+     INSERT INTO JOB_POSITIONS
+    VALUES (11111, 'New Job One', '01-March-2011', 1); 
+
+    
+       INSERT INTO JOB_POSITIONS
+    VALUES (12345, 'New Job Two', '01-Jan-2011', 3); 
+    
+      INSERT INTO JOB_POSITIONS
+    VALUES (12888, 'New Job Three', '17-Jan-2011', 3); 
+    
+      INSERT INTO JOB_POSITIONS
+    VALUES (124455, 'New Job Four', '01-Jan-2011', 4); 
+      INSERT INTO JOB_POSITIONS
+    VALUES (123445, 'New Job Five', '03-Mar-2011', 6); 
+
+
+APPLIED
+
+
+ INSERT INTO APPLIED
+    VALUES (12345, 1, '01-Jan-2011'); 
+
+  INSERT INTO APPLIED
+    VALUES (12888, 4, '01-Jan-2011'); 
+
+     INSERT INTO APPLIED
+    VALUES (12888, 8, '01-Jan-2011'); 
+
+
+PARTS
+
+
+    INSERT INTO PARTS
+    VALUES (12, 1, 3.50, 'Ball Bearing'); 
+
+      INSERT INTO PARTS
+    VALUES (13, 1, 5.50, 'Ball'); 
+
+         INSERT INTO PARTS
+    VALUES (14, 2, 8.80, 'Pen'); 
+    
+         INSERT INTO PARTS
+    VALUES (15, 2, 10.80, 'Pencil'); 
+
+         INSERT INTO PARTS
+    VALUES (16, 3, 9.80, 'Jack'); 
+
+         INSERT INTO PARTS
+    VALUES (17, 3, 11.80, 'Mic'); 
+
+         INSERT INTO PARTS
+    VALUES (18, 4, 12.80, 'Ink'); 
+
+
+         INSERT INTO PARTS
+    VALUES (19, 4, 1.80, 'Staple'); 
+
+
+SALES_HISTORY
+
+
+       INSERT INTO SALES_HISTORY
+    VALUES (1, 6, 2 , '8:00', 5, 2); 
+
+        INSERT INTO SALES_HISTORY
+    VALUES (2, 2, 3 , '8:00', 5, 3); 
+
+             INSERT INTO SALES_HISTORY
+    VALUES (3, 3, 4 , '8:00', 8, 3); 
+
+
+INTERVIEW
+
+
+            INSERT INTO INTERVIEW
+    VALUES (1, 11111, 70 , 'Pass', 7, 'John', 'Smith'); 
+            INSERT INTO INTERVIEW
+    VALUES (2, 11111, 80 , 'Pass', 7, 'Jack', 'Star'); 
+
+
+            INSERT INTO INTERVIEW
+    VALUES (3, 12345, 85, 'Pass', 12, 'Jack', 'Star'); 
+    
+            INSERT INTO INTERVIEW
+    VALUES (3, 12345, 85, 'Pass', 12, 'Jack', 'Star'); 
+    
+      INSERT INTO INTERVIEW
+    VALUES (5, 11111, 85, 'Pass', 12, 'John', 'Star'); 
+
+    
+            INSERT INTO INTERVIEW
+    VALUES (6, 11111, 85, 'Pass', 12, 'Jay', 'Shine'); 
+
+
+
+PROD_PART
+
+            INSERT INTO PROD_PART
+    VALUES (5,12,20); 
+    
+                INSERT INTO PROD_PART
+    VALUES (6,13,200); 
+    
+    
+                INSERT INTO PROD_PART
+    VALUES (4,14,25); 
+
+
+
+###########################
+Views
+###########################
+1.     CREATE VIEW salary as 
+    SELECT * FROM EMP_PAY em
+    right join full_emp f on em.emp_id = f.personal_id
+
+2.  select * from interview i 
+    right join  people p on p.personal_id = i.interviewee_id
+    where pass_fail = 'Pass'
+
+3.
+
+###############################
+Querys
+###############################
+1. select * from interview i 
+right join people p on p.personal_id = i.interviewee_id
+where first_name = 'Hellen' and last_name ='Cole' and job_position = 11111
+John Star and Jay Shine
+
+2.  SELECT job_id FROM 
+  JOB_POSITIONS j 
+  RIGHT JOIN DEPARTMENT d ON d.dept_id = j.dept
+WHERE POSTED_DATE BETWEEN '01-Jan-2011' and '01-Feb-2011' AND dept_name = 'Marketing'
+
+job_id = 12345 and job_id = 12888
+
+
+3.     SELECT personal_id, first_name, last_name FROM
+    PEOPLE p
+   RIGHT JOIN EMPLOYEE e ON p.personal_id = e.emp_id
+   WHERE e.supervisor_id IS NULL
+
+id	fname	lname
+2	Hugh	Reed
+6	Jack	Skelington
+
+
+4. SELECT site_id,site_location FROM 
+MARKETING_SITES m 
+full JOIN SALES_HISTORY s ON s.marketing_site = m.site_id
+WHERE s.sales_id is null
+
+site_id  site_location
+1	Jacksville
+
+5.
+
+6.    SELECT personal_id, first_name, last_name From full_emp
+  WHERE personal_id =
+  (
+  SELECT sales_person_id FROM SALES_HISTORY s
+  RIGHT JOIN PRODUCT p ON s.product = p.product_id
+  WHERE LIST_PRICE > 200)
+
+personal_id	first_name  	last_name
+2		Hugh		Reed
+
+7.
+  SELECT dept_name FROM
+  (
+  SELECT * FROM JOB_POSITIONS j
+  RIGHT JOIN DEPARTMENT d ON j.dept = d.dept_id
+  WHERE posted_date < '01-Jan-2011' or posted_date > '02-Feb-2011'
+  )
+dept_name
+Sales
+Customer Serv
+
+8. CREATE VIEW applied9 AS 
+  SELECT p.personal_id, p.first_name, p.last_name FROM 
+  APPLIED a 
+  RIGHT JOIN PEOPLE p ON a.personal_id = p.personal_id
+  WHERE a.job_id = 12345
+  select * from 
+  DEPT_EMP d
+  RIGHT JOIN applied9 a ON  d.emp_id = a.personal_id
+personal_id	first_name	last_name
+1		John		Smith
+
+9. 
+SELECT * FROM SALES_HISTORY s
+RIGHT JOIN full_emp e ON s.sales_person_id = e.personal_id
+WHERE SALES_ID IS NOT NULL
+
+Hugh has sold the most
+
+
+10.
+
+11.     select * from dept_emp e
+    RIGHT JOIN DEPARTMENT d on d.dept_id = e.dept_id
+	Hugh with id 2 has worked at all the departments
+
+
+12.   select * from INTERVIEW i
+  right join people_phone p on i.interviewee_id = p.personal_id 
+
+Candra Hackney  chackney@email.com
+
+
+
+13.
+create view people_phone as 
+  select * from PEOPLE p 
+  right join phone ph on p.personal_id = ph.person_id 
+  
+  
+  select * from INTERVIEW i
+  right join people_phone p on i.interviewee_id = p.personal_id 
+  
+
+ Candra Hackney chackney@email.com 199-555-55555
+     Hellen Cole f@yahoo.com 559-555-55555
+    
+14. 
+  select * from EMP_PAY em
+  right join full_emp e on em.emp_id = e.personal_id
+  order by amount desc
+Hugh id 2
+
+15.    select vendor_id, ven_name from VENDOR v
+  right join PARTS p on v.vendor_id = p.ven_id
+  WHERE PART_NAME = 'Cup'
+
+vendor_id = 3
+ven_name = Macks Parts
+
+
